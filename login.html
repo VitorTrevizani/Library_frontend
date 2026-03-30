@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+
+    <main>
+        <div id="formulario">
+            <form action="#" method="post" id="login-form">
+
+                <p>
+                    <label for="femail">E-mail: </label>
+                    <input type="text" name="email" id="femail">
+                </p>
+                <br>
+                <p>
+                    <label for="fpassword">Password: </label>
+                    <input type="password" name="password" id="fpassword">
+                </p>
+                
+                <button type="submit" id="send">Entrar</button>
+
+            </form>
+        </div>
+    </main>
+
+    <script>
+        let res = null
+        const link = "http://localhost:3000/user/login"
+        const send = document.getElementById("send")
+        const form = document.getElementById("login-form")
+
+       send.addEventListener("click", async (event) => {
+         event.preventDefault(); // impede reload da página
+         const formData = new FormData(form)
+         const data = Object.fromEntries(formData)
+            try{
+                res = await fetch(link, {
+                    method:'post',
+                    headers:{
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+                const response = await res.json()
+                if(res.ok){
+                    localStorage.setItem("jwt", response);
+                    window.location.href = "home.html";
+                }else{
+                   console.log(response) 
+                }
+            }catch(err){
+                console.log("erro:" + err)
+            }       
+       })
+
+       
+    </script>
+</body>
+</html>

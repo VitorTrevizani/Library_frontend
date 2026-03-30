@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+     <nav>
+        <a href="">Home</a>
+        <a href="">Books</a>
+        <a href="">Tell us</a>
+    </nav>
+
+    <main>
+        <div id="pesquisa">
+            <input type="text" id="title">
+            <button id="buscar">Buscar</button>
+        </div> 
+        <div id="div-books">
+
+        </div>
+    </main>
+
+
+    <script>
+        const token =  localStorage.getItem("jwt");
+        const buttonBuscar = document.getElementById("buscar")
+        const pesquisa = document.getElementById("title").value
+        const divBooks = document.getElementById("div-books");
+
+
+
+        async function getBooks (){
+            const res  = await fetch("http://localhost:3000/user/show", {
+                headers:{
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            const books =  await res.json()
+            showBooks(books)
+        }
+
+        function showBooks(books){
+           divBooks.innerHTML = "";
+           for(let i=0; i<books.length; i++){
+               const livro = document.createElement("div")
+               livro.classList.add('livro')
+               const nome = document.createElement("p")
+               const autor = document.createElement("p")
+               const detailsButton = document.createElement("button")
+    
+               nome.textContent = books[i].title
+               autor.textContent = books[i].author
+               detailsButton.textContent = "Detalhes"
+
+               livro.appendChild(nome)
+               livro.appendChild(autor)
+               livro.appendChild(detailsButton)
+               divBooks.appendChild(livro)
+           }
+        } 
+
+   
+        getBooks()
+
+
+
+        buttonBuscar.addEventListener("click", async () => {
+            const pesquisa = document.getElementById("title").value
+            const res = await fetch(`http://localhost:3000/user/show?title=${pesquisa}`, {
+                    headers:{
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+            })
+            const books = await res.json();
+            showBooks(books) 
+        })
+        
+
+    </script>
+
+
+    </main>
+</body>
+</html>

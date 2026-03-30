@@ -1,0 +1,108 @@
+@charset "UTF-8";
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+html, body{
+    height: 100vh;
+    width: 100vw;
+}
+
+body{
+    background-image: url("/img/livro3.jpg");
+    background-repeat: no-repeat;
+    background-size:cover;
+}
+
+nav{
+    display: flex;
+    justify-content:space-evenly;
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: burlywood;
+    box-shadow: 0px 0px 0px 3px white;
+}
+
+nav > a{
+    padding: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    color:black;
+    text-shadow: 0px 0px 20px black;
+}
+
+nav > a:hover{
+    /* background-color: brown;
+    color:white; */
+    background-color: black;
+    color:burlywood;
+}
+
+main{
+    margin: 6%;
+    height: 100%;
+    width: 80%;
+}
+
+#pesquisa{
+    padding: 4%;
+    margin-bottom: 60px;
+}
+
+#pesquisa > input{
+    width: 50%;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#pesquisa > button{
+    margin-left: 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    padding: 1%;
+
+}
+
+#div-books{
+    display:flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    column-gap: 40px;
+    text-align: center;
+}
+
+.livro{
+   flex-basis: 200px;
+   display:flex;
+   flex-direction: column;
+   background-color: brown;
+   text-align: center;
+   border-radius: 10px;
+   padding: 10px;
+   height: 15%;
+}
+
+
+.livro > p{
+    color:white;
+}
+
+.livro > button{
+    margin-top: 5%;
+    border-radius: 10px;
+    font-weight: bold;
+    padding: 3%;
+}
+
+
+
+

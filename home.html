@@ -8,8 +8,8 @@
 </head>
 <body>
      <nav>
-        <a href="">Home</a>
-        <a href="">Books</a>
+        <a href="home.html">Home</a>
+        <a href="perfil.html">Perfil</a>
         <a href="">Tell us</a>
     </nav>
 
@@ -29,18 +29,28 @@
         const buttonBuscar = document.getElementById("buscar")
         const pesquisa = document.getElementById("title").value
         const divBooks = document.getElementById("div-books");
-
+    
 
 
         async function getBooks (){
-            const res  = await fetch("http://localhost:3000/user/show", {
-                headers:{
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+            try{
+                const res  = await fetch("http://localhost:3000/user/show", {
+                    headers:{
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const books =  await res.json()
+                if(res.ok){
+                    showBooks(books)
+                }else{
+                    alert(`Erro ${res.status}: ${books.msg}`)
                 }
-            })
-            const books =  await res.json()
-            showBooks(books)
+
+            }catch(erro){
+                alert("Não foi possível carregar os livros. Tente novamente mais tarde!")
+                console.log(erro)
+            }  
         }
 
         function showBooks(books){
@@ -50,11 +60,15 @@
                livro.classList.add('livro')
                const nome = document.createElement("p")
                const autor = document.createElement("p")
-               const detailsButton = document.createElement("button")
+               const detailsButton = document.createElement("a")
+               detailsButton.href = `detalhes.html?title=${books[i].title}&author=${books[i].author}&totalCopies=${books[i].totalCopies}&availableCopies=${books[i].availableCopies}&bookId=${books[i].id}`
     
                nome.textContent = books[i].title
+               nome.style.fontStyle = "italic";
                autor.textContent = books[i].author
+              
                detailsButton.textContent = "Detalhes"
+
 
                livro.appendChild(nome)
                livro.appendChild(autor)
@@ -69,15 +83,25 @@
 
 
         buttonBuscar.addEventListener("click", async () => {
-            const pesquisa = document.getElementById("title").value
-            const res = await fetch(`http://localhost:3000/user/show?title=${pesquisa}`, {
+            try{
+                const pesquisa = document.getElementById("title").value
+                const res = await fetch(`http://localhost:3000/user/show?title=${pesquisa}`, {
                     headers:{
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     }
-            })
-            const books = await res.json();
-            showBooks(books) 
+                })
+                const books = await res.json();
+                if(res.ok){
+                    showBooks(books)
+                }else{
+                    alert(`Erro ${res.status}: ${books.msg}`)
+                }
+            }catch(erro){
+                alert("Não foi possível fazer a pesquisa. Tente novamente mais tarde!") 
+                console.log(erro)
+            }
+            
         })
         
 

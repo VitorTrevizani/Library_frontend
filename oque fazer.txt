@@ -1,2 +1,0 @@
-//achar o livro memso sem se importar com maiuscular, minusculas ou acento
-//deixar o nome do livro ou do autor em negrito. ou então deixar o do autor em itálico. ou ainda deixar o do autor em itálico e o titulo em negrito.

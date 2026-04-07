@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="css/perfil.css">
+</head>
+<body>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="">Tell us</a>
+    </nav>
+    <main>
+        
+        <h1 id="nome"></h1>
+    
+        <h3>Emprestimos:</h3>
+
+        <div id="emprestimos">
+            
+        </div>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("jwt")
+        const name = localStorage.getItem("name")
+
+
+        
+        async function perfil(){
+            try{
+                const res = await fetch("http://localhost:3000/user/loans", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const response = await res.json()
+
+            
+                if(res.ok){
+
+                
+                    const currentLoans = response.loans.currentLoans;
+
+                    const nodeName = document.getElementById("nome") 
+                    nodeName.textContent = name
+                
+
+                    const emprestimos = document.getElementById("emprestimos");
+    
+                    for(let i=0; i<currentLoans.length; i++){
+
+                        const res = await fetch(`http://localhost:3000/user/show?id=${currentLoans[i].bookId}`, {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`
+                            }
+                        })
+
+                        const book = await res.json()
+                        
+                        const divLoans = document.createElement("div")
+                        divLoans.classList = "emprestimo"
+
+                        const botaoDevolver = document.createElement("button")
+                        botaoDevolver.textContent = "Devolver"
+                        botaoDevolver.classList  = "devolver"
+                        botaoDevolver.dataset.id = `${currentLoans[i].bookId}`
+                    
+
+
+                        const botaoDetalhes = document.createElement("a")
+                        botaoDetalhes.textContent = "Ver detalhes do livro"
+                        botaoDetalhes.href = `detalhes.html?title=${book.title}&author=${book.author}&availableCopies=${book.availableCopies}&totalCopies=${book.totalCopies}&bookId=${book.id}`
+
+
+
+                        const nameBookNode = document.createElement("h4");
+                        const loanDateNode = document.createElement("h4");
+                        const dueDateNode = document.createElement("h4");
+
+                        nameBookNode.textContent = book.title
+                        loanDateNode.textContent = currentLoans[i].loanDate
+                        dueDateNode.textContent = currentLoans[i].dueDate
+
+                        const pName = document.createElement("p");
+                        pName.textContent = "Nome: "
+                        const pLoanDate = document.createElement("p")
+                        pLoanDate.textContent = "Foi adquirido em: "
+                        const pDueDate = document.createElement("p")
+                        pDueDate.textContent = "Deve ser devolvido em: " 
+
+
+                        divLoans.appendChild(pName)
+                        divLoans.appendChild(nameBookNode)
+                        divLoans.appendChild(pLoanDate)
+                        divLoans.appendChild(loanDateNode)
+                        divLoans.appendChild(pDueDate)
+                        divLoans.appendChild(dueDateNode)
+                        divLoans.appendChild(botaoDevolver)
+                        divLoans.appendChild(botaoDetalhes)
+                        emprestimos.appendChild(divLoans)
+                    }
+
+                }
+                else{
+                    alert(`Erro ${res.status}: ${response.msg}`)
+                }
+                
+            }catch(erro){
+                alert("Não foi possível carregar o perfil. Tente novamente mais tarde!")
+                console.log(erro)
+            }
+            
+        }
+
+              
+
+           
+
+        
+
+
+        perfil()
+
+
+        const emprestimos = document.getElementById("emprestimos")
+
+        emprestimos.addEventListener("click", async (e) => {
+            if(e.target.classList.contains("devolver")){
+                const bookId = e.target.dataset.id
+
+                try{
+                    const res = await fetch("http://localhost:3000/user/return", {
+                        method:"post",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ 
+                            bookId:bookId 
+                    })
+                })
+
+                const response = await res.json()
+
+                if(res.ok){
+                    alert("Livro devolvido com sucesso!")
+                }else{
+                    alert(`Erro ${res.status}: ${response.msg}`)
+                }
+
+                }catch(erro){
+                    alert("Não foi possível o livro. Tente novamente mais tarde!")
+                }
+
+               
+
+                
+
+            }
+        })
+    
+       
+    </script>
+</body>
+</html>

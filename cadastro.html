@@ -55,10 +55,10 @@
                 if(res.status = 200){
                     window.location.href = "index.html";
                 }else{
-                    console.log(response.msg)
+                    alert(`Erro ${res.status}: ${response.msg}`)
                 }
-            }catch(err){
-              console.log("Erro: " + err)
+            }catch(erro){
+                alert("Não foi possível fazer o cadastro. Tente novamente mais tarde!")
             }
             
        })

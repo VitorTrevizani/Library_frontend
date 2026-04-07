@@ -4,8 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes</title>
+    <link rel="stylesheet" href="css/detalhes.css">
 </head>
 <body>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="">Tell us</a>
+    </nav>
+
+    <main>
+        <div id="orientacao">
+            <p>Para obter um livro emprestado, você deve atender a todos os seguintes requisitos:</p>
+            <p>1- Não pode execeder o limite de três empréstimo;</p>
+            <p>2- Se o estiver com algum prazo atrasado, não poderá obter novos livros enquanto não devolver o livro atrasado;</p>
+            <p>3- Só é possível obter uma cópia de cada livro;</p>
+            <p>4- O prazo fixo é de 10 dias, independente do livro.</p>
+        </div>
+        <div id="infos">
+            <div class="info">
+                <h1 id="title"></h1>
+            </div>
+            <div class="info">
+                <p>AUTOR: </p>
+                <h3 id="author"></h3>
+            </div>
+            <div class="info">
+                <p>TOTAL DE CÓPIAS: </p>
+                <h4 id="totalCopies"></h4>
+            </div>
+            <div class="info">
+                <p>CÓPIAS DISPONÍVEIS: </p>
+                <h4 id="availableCopies"></h4>
+            </div>
+            <div id="pegar-emprestado"><button>Pegar emprestado</button></div>
+        </div>
+    </main>
     
+    <script>
+
+        const token =  localStorage.getItem("jwt");
+        
+      
+        const params = new URLSearchParams(window.location.search);
+        let title = params.get("title");
+        let author = params.get("author");
+        let totalCopies = params.get("totalCopies");
+        let availableCopies = params.get("availableCopies")
+        let bookId = params.get("bookId")
+
+        const titleNode = document.getElementById("title")
+        const authorNode = document.getElementById("author")
+        const totalCopiesNode = document.getElementById("totalCopies")
+        const availableCopiesNode = document.getElementById("availableCopies")
+        
+
+        titleNode.innerHTML = title
+        authorNode.innerHTML = author
+        totalCopiesNode.innerHTML = totalCopies
+        availableCopiesNode.innerHTML = availableCopies
+
+
+        const pegarEmprestado = document.getElementById("pegar-emprestado")
+
+        pegarEmprestado.addEventListener("click", async () => {
+            try{
+                const res = await fetch("http://localhost:3000/user/borrow", {
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        bookId: bookId
+                    })
+            })
+
+            const response = await res.json()
+            console.log(response)
+            if(res.ok){
+                alert("Livro obtido com sucesso!")
+            }
+            else{
+                alert(`Erro ${res.status}: ${response.msg}`)
+            }
+
+            }catch(erro){
+               alert("Não foi possível fazer o empréstimo do livro. Tente novamente mais tarde!")
+            }
+           
+        })
+
+
+
+    </script>
 </body>
 </html>

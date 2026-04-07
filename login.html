@@ -49,13 +49,14 @@
                 })
                 const response = await res.json()
                 if(res.ok){
-                    localStorage.setItem("jwt", response);
+                    localStorage.setItem("jwt", response.token);
+                    localStorage.setItem("name",response.name);
                     window.location.href = "home.html";
                 }else{
-                   console.log(response) 
+                   alert(`Erro ${res.status}: ${response.msg}`)
                 }
-            }catch(err){
-                console.log("erro:" + err)
+            }catch(erro){
+                alert("Não foi possível fazer o login. Tente novamente mais tarde!")
             }       
        })
 

@@ -48,7 +48,7 @@ nav > a:hover{
 
 main{
     margin: 7%;
-    height: 80%;
+    height: 90%;
     background-color:cadetblue;
     border-radius: 10px;
     text-align: center;
@@ -85,8 +85,9 @@ main > h3{
     color: white
 }
 
-.emprestimo  a{
+main  a{
     display: block;
+    font-weight: bold;
     margin: 30px 5px;
     padding: 5px;
     border-radius: 5px;
@@ -96,7 +97,8 @@ main > h3{
 }
 
 .emprestimo button{
-    width: 95%;;
+    width: 95%;
+    font-weight: bold;
     margin-top: 20px;
     padding: 7px;
     border-radius: 5px;

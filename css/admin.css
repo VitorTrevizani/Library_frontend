@@ -13,7 +13,6 @@ html, body{
 
 body{
     background-image: url("/img/livro3.jpg");
-    background-repeat: no-repeat;
     background-size:cover;
 }
 
@@ -45,48 +44,65 @@ nav > a:hover{
     color:burlywood;
 }
 
+
 main{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 20px;
-    background-color:darkcyan;
-    margin: 10%;
-    height: 60%;
-    
-}
-
-main > div#orientacao{
-    padding:  2% 5%; 
-    color: white;
-}
-
-main > div#infos{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.info{
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    color: white;
+    margin: 6%;
+    height: 100%;
+    width: 80%;
 }
 
 
-.info>p{
-    margin-right: 30px;
+main > p {
+    color:white;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
-div#botoes{
-  text-align: center;
-  margin: 20px
-}
-
-div#botoes > button{
-    padding: 10px;
+main> input{
+    width: 50%;
     border-radius: 10px;
-    background-color: white;
+    height: 5%;
+}
+
+main > button{
+    margin-left: 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    padding: 1%;
+
+}
+
+div#usuarios{
+    display:flex;
+    margin-top:20px;
+    margin-right: 10%;
+}
+
+div#admins, div#banidos{
+    background-color:blueviolet;
+    padding: 10px;
+    border-radius: 2%;
     margin: 10px;
 }
+
+div#admins > h1, div#banidos > h1{
+   color:white;
+}
+
+.usuario, .admin, .banned{
+    background-color:brown;
+    color:white;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+
+.usuario > button{
+    padding: 1%;
+    width: 25%;
+    margin: 2%;
+    border-radius: 10%;
+
+}
+

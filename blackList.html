@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista negra</title>
+    <link rel="stylesheet" href="css/blackList.css">
+</head>
+<body>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="">Tell us</a>
+    </nav>
+
+    <main>
+        <div id="black-list">
+            
+        </div>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("jwt")
+        async function isAdmin() {
+            try{
+                const res = await fetch("http://localhost:3000/admin/isAdmin", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const userData = await res.json()
+                if(res.ok){
+                    console.log("é admin!")
+                }else{
+                    alert(`Erro ${res.status}: ${userData.msg}`)
+                    window.location.href = "home.html"
+                }
+            }catch(error){
+                alert("Falha ao carregar a página")
+                console.log(error)
+            }
+        }
+
+
+
+
+        function criarElemento(texto1, texto2, elementoPai){
+            const element1 = document.createElement("h4")
+            element1.textContent = texto1
+            const element2 = document.createElement("p")
+            element2.textContent = texto2
+            elementoPai.appendChild(element1)
+            elementoPai.appendChild(element2)
+        }
+
+        async function showBlackList() {
+            try{
+                const res = await fetch("http://localhost:3000/admin/blackList", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`                
+                    }
+                })
+
+                const loans = await res.json()
+
+            
+                if(res.ok){
+                    for(let i=0; i<loans.length; i++){
+
+                        const blackList = document.getElementById("black-list")
+
+                        const blackLoan = document.createElement("div")
+                        blackLoan.classList = "loan"
+
+                        criarElemento("ID do usuário: ", loans[i].userId, blackLoan) 
+                        criarElemento("ID do livro: ", loans[i].bookId, blackLoan)                   
+                        criarElemento("Data do empréstimo: ", loans[i].loanDate, blackLoan)
+                        criarElemento("Data de devolução: ", loans[i].dueDate, blackLoan)
+
+
+                        const detalhesUsuario = document.createElement("button")
+                        const detalhesLivro = document.createElement("button")
+                        detalhesUsuario.textContent = "Detalhes do usuário"
+                        detalhesLivro.textContent = "ver detalhes do livro"
+                        blackLoan.appendChild(detalhesUsuario)
+                        blackLoan.appendChild(detalhesLivro)
+                        
+                        blackList.appendChild(blackLoan)
+                    }
+                    
+                }else{
+                    alert(`Erro ${res.status}: ${response.msg}`)
+                }
+            }catch(error){
+                alert("Não foi possível carregar a lista negra. Tente novamente mais tarde!")
+                console.log(error)
+            }
+            
+        }
+
+
+        isAdmin()
+        showBlackList()
+        
+    </script>
+</body>
+</html>

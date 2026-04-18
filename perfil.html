@@ -12,7 +12,7 @@
         <a href="perfil.html">Perfil</a>
         <a href="">Tell us</a>
     </nav>
-    <main>
+    <main id="main">
         
         <h1 id="nome"></h1>
     
@@ -163,7 +163,36 @@
 
             }
         })
-    
+
+          
+         async function isAdmin() {
+            try{
+                const res = await fetch("http://localhost:3000/admin/isAdmin", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const userData = await res.json()
+                if(res.ok){
+                    const main = document.getElementById("main")
+                    const buttonUsers = document.createElement("a")
+                    const buttonBlackList = document.createElement("a")
+                    buttonUsers.textContent = "Gerenciar usuários"
+                    buttonBlackList.textContent = "Ver lista negra"
+                    buttonUsers.href = "admin.html"
+                    buttonBlackList.href = "blackList.html"
+                    main.appendChild(buttonUsers)
+                    main.appendChild(buttonBlackList)
+                }
+            }catch(error){
+                alert("Falha ao carregar recursos!")
+                console.log(error)
+            }
+        }
+
+        isAdmin()
+
        
     </script>
 </body>

@@ -43,6 +43,7 @@
                 const books =  await res.json()
                 if(res.ok){
                     showBooks(books)
+                    
                 }else{
                     alert(`Erro ${res.status}: ${books.msg}`)
                 }
@@ -94,6 +95,7 @@
                 const books = await res.json();
                 if(res.ok){
                     showBooks(books)
+                    
                 }else{
                     alert(`Erro ${res.status}: ${books.msg}`)
                 }

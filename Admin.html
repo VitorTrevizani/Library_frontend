@@ -4,31 +4,304 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <h1>Bem vindo, admin!</h1>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="">Tell us</a>
+    </nav>
+
+    <main id="main">
+      
+     
+            <p>Procure um usuário por id, email ou nome:</p>
+            <input type="text" id="pesquisa">
+            <button id="botao-pesquisar">Pesquisar</button>
+            <div id="usuarios">
+
+            </div>
+
+            <div id="admins">
+                <h1>Adminstradores:</h1>
+
+            </div>
+
+            <div id="banidos">
+                <h1>Usuários banidos:</h1>
+
+            </div>
+    </main>
+
 
     <script>
-        // const token = localStorage.getItem("jwt")
-        // async function isAdmin() {
-        //     try{
-        //         const res = await fetch("http://localhost:3000/user/userData", {
-        //             headers: {
-        //                 "Content-Type": "application/json",
-        //                 "Authorization": `Bearer ${token}`
-        //             }
-        //         })
-        //         const userData = await res.json()
-        //         if(res.ok){
-        //             if(userData.role == )
-        //         }else{
-        //             alert(`Erro ${res.status}: ${userData.msg}`)
-        //         }
-        //     }catch(error){
-        //         alert("Falha ao carregar a página")
-        //     }
-          
-        // }
+        const token = localStorage.getItem("jwt")
+        async function isAdmin() {
+            try{
+                const res = await fetch("http://localhost:3000/admin/isAdmin", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const userData = await res.json()
+                if(res.ok){
+                    console.log("é admin!")
+                }else{
+                    alert(`Erro ${res.status}: ${userData.msg}`)
+                    window.location.href = "home.html"
+                }
+            }catch(error){
+                alert("Falha ao carregar a página")
+                console.log(error)
+            }
+        }
+
+
+        const divUsuarios = document.getElementById("usuarios")
+        const botaoPesquisar = document.getElementById("botao-pesquisar")
+
+
+         function criarElemento(texto1, texto2, elementoPai){
+            const element1 = document.createElement("h4")
+            element1.textContent = texto1
+            const element2 = document.createElement("p")
+            element2.textContent = texto2
+            elementoPai.appendChild(element1)
+            elementoPai.appendChild(element2)
+        }
+
+
+        async function showUsers(pesquisa) {
+            try{
+                const res = await fetch(`http://localhost:3000/admin/users/${pesquisa}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+
+                const users = await res.json()
+               console.log(users)
+
+                if(res.ok){
+
+                    for(let i=0; i<users.length; i++){
+
+                        const divUser = document.createElement("div")
+                        divUser.classList = "usuario"
+
+                        criarElemento("ID: ", users[i].id, divUser)
+                        criarElemento("Nome: ", users[i].name, divUser)
+                        criarElemento("Email: ", users[i].email, divUser)
+                        criarElemento("Role: ", users[i].role, divUser)
+                        criarElemento("Conta criada em: ", users[i].cratedAt, divUser)
+
+                        const banir = document.createElement("button")
+                        banir.textContent = "Banir"
+                        banir.dataset.id = users[i].id
+                        banir.classList = "banir"
+                       
+                        const promover = document.createElement("button")
+                        promover.textContent = "Promover"
+                        promover.dataset.id = users[i].id
+                        promover.classList = "promover"
+                        
+                        const rebaixar = document.createElement("button")
+                        rebaixar.textContent = "Rebaixar"
+                        rebaixar.dataset.id = users[i].id
+                        rebaixar.classList = "rebaixar"
+                     
+
+                        divUser.appendChild(banir)
+                        divUser.appendChild(promover)
+                        divUser.appendChild(rebaixar)
+                        divUsuarios.appendChild(divUser)
+                    }
+
+                }else{
+                   alert(`Erro ${users.status}: ${users.msg}`)
+                }
+
+            }catch(error){
+                alert("Erro ao tentar carregar usuários. Tente novamente mais tarde!")
+                console.log(error)
+            }
+         
+        }
+
+
+         botaoPesquisar.addEventListener("click", () => {
+            const pesquisa = document.getElementById("pesquisa").value
+            divUsuarios.innerHTML = ""
+            showUsers(pesquisa)
+        })
+
+        const usuarios = document.getElementById("usuarios")
+
+        async function alterarRole(rota, id, estado) {
+            try{
+                const res = await fetch(`http://localhost:3000/admin/${rota}`,{
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        id: id
+                    }) 
+               })
+
+               const response = await res.json()
+               console.log(response)
+
+                if(res.ok){
+                   alert("Usuário " + estado + " com sucesso")
+                }else{
+                    alert(`Erro ${response.status}: ${response.msg}`)
+                }
+            }catch(error){
+                alert("A operação falhou! Tente novamente mais tarde")
+                console.log(error)
+            }
+           
+        }
+
+
+        async function showAdmins() {
+            try{
+ 
+                const res = await fetch("http://localhost:3000/admin/showAdmins", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+
+                const admins = await res.json()
+
+                if(res.ok){
+
+                    const divAdmins = document.getElementById("admins")
+
+                    for(let i=0; i< admins.length; i++){
+
+                        const divAdmin = document.createElement("div")
+                        divAdmin.classList = "admin"
+
+                        criarElemento("ID: ", admins[i].id, divAdmin)
+                        criarElemento("Nome: ", admins[i].name, divAdmin)
+                        criarElemento("Email: ", admins[i].email, divAdmin)
+                        criarElemento("Role: ", admins[i].role, divAdmin)
+                        criarElemento("Conta criada em: ", admins[i].cratedAt, divAdmin)
+
+
+                        const rebaixar = document.createElement("button")
+                        rebaixar.textContent = "Rebaixar"
+                        rebaixar.dataset.id = admins[i].id
+                        rebaixar.classList = "rebaixar"
+
+                        divAdmin.appendChild(rebaixar)
+                        divAdmins.appendChild(divAdmin)
+
+                        
+                    }
+                }else{
+                    alert(`Erro: ${admins.status}. ${admins.msg}`)
+                
+                }
+            }catch(error){
+                alert("Não foi possível carregar a lista de administradores!")
+                console.log(error)
+            }
+            
+        }
+
+        async function showBanned() {
+            try{
+                const res = await fetch("http://localhost:3000/admin/showBanned", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+
+                const banned = await res.json()
+                console.log(banned)
+
+                if(res.ok){
+
+                    const banidos = document.getElementById("banidos")
+
+                    for(let i=0; i<banned.length; i++){
+
+                        const divBanned = document.createElement("div")
+                        divBanned.classList = "banned"
+
+                        criarElemento("ID: ", banned[i].id, divBanned)
+                        criarElemento("Nome: ", banned[i].name, divBanned)
+                        criarElemento("Email: ", banned[i].email, divBanned)
+                        criarElemento("Role: ", banned[i].role, divBanned)
+                        criarElemento("Conta criada em: ", banned[i].cratedAt, divBanned)
+
+                        const desbanir = document.createElement("button")
+                        desbanir.textContent = "Desbanir"
+                        desbanir.dataset.id = banned[i].id
+                        desbanir.classList = "desbanir"
+
+                        divBanned.appendChild(desbanir)
+                        banidos.appendChild(divBanned)
+                    }
+                    
+                }else{
+                    alert(`Erro: ${banned.status}. ${banned.msg}`)
+            }
+            }catch(error){
+                alert("Não foi possível carregar a lista de usuários banidos!")
+                console.log(error)
+            }
+            
+        }
+
+        const main = document.getElementById("main")
+ 
+        main.addEventListener("click", async (botao) => {
+           
+            if(botao.target.classList.contains("banir")){
+                const id = botao.target.dataset.id
+                alterarRole("ban", id, "banido")
+            }
+                
+            else if(botao.target.classList.contains("promover")){
+                const id = botao.target.dataset.id
+                alterarRole("addAdmin", id, "promovido")
+            }
+
+            else if(botao.target.classList.contains("rebaixar")){
+                const id = botao.target.dataset.id
+                alterarRole("addUser", id, "rebaixado")
+            }
+
+            else if(botao.target.classList.contains("desbanir")){
+                const id = botao.target.dataset.id
+                alterarRole("addUser", id, "desbanido")
+            }
+            
+        
+        })
+
+
+
+        showAdmins()
+        showBanned()
+
+
+        
+
+        
+
     </script>
 </body>
 </html>
